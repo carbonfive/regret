@@ -15,9 +15,9 @@ describe Regret::TestHelper do
   let(:image_comparer) { double(diff: diff) }
 
   describe '.compare' do
-    context 'when provided a label' do
-      let(:test_file_path) { Regret::Configuration.tmp_path + '/some_label.png' }
-      let(:expected_file_path) { File.dirname(__FILE__) + '/regret/some_label.png' }
+    context 'when provided a name' do
+      let(:test_file_path) { Regret::Configuration.tmp_path + '/some_name.png' }
+      let(:expected_file_path) { File.dirname(__FILE__) + '/regret/some_name.png' }
       let(:expected_file_exists) { false }
 
       before do
@@ -28,7 +28,7 @@ describe Regret::TestHelper do
       it 'takes a screenshot using provided page session' do
         allow(File).to receive(:rename)
 
-        Regret::TestHelper.compare(page, label: 'some_label', selector: 'foobar')
+        Regret::TestHelper.compare(page, name: 'some_name', selector: 'foobar')
 
         expect(page).to have_received(:save_screenshot).with(
           test_file_path, { selector: 'foobar' }
@@ -49,7 +49,7 @@ describe Regret::TestHelper do
           let(:diff) { [] }
 
           it 'compares the screenshot to the one already in references' do
-            expect(Regret::TestHelper.compare(page, label: 'some_label')).to eq true
+            expect(Regret::TestHelper.compare(page, name: 'some_name')).to eq true
           end
         end
 
@@ -57,7 +57,7 @@ describe Regret::TestHelper do
           let(:diff) { [1, 2] }
 
           it 'compares the screenshot to the one already in references' do
-            expect(Regret::TestHelper.compare(page, label: 'some_label')).to eq false
+            expect(Regret::TestHelper.compare(page, name: 'some_name')).to eq false
           end
         end
       end
@@ -81,7 +81,7 @@ describe Regret::TestHelper do
             it 'creates a new folder for screenshots' do
               folder = File.dirname(__FILE__) + '/regret/'
 
-              Regret::TestHelper.compare(page, label: 'some_label')
+              Regret::TestHelper.compare(page, name: 'some_name')
 
               expect(Dir).to have_received(:mkdir).with(folder)
             end
@@ -91,7 +91,7 @@ describe Regret::TestHelper do
             let(:dir_exists) { true }
 
             it 'does not create a new folder' do
-              Regret::TestHelper.compare(page, label: 'some_label')
+              Regret::TestHelper.compare(page, name: 'some_name')
 
               expect(Dir).to_not have_received(:mkdir)
             end
@@ -99,13 +99,13 @@ describe Regret::TestHelper do
         end
 
         it 'moves the screenshot to the expected folder location' do
-          Regret::TestHelper.compare(page, label: 'some_label')
+          Regret::TestHelper.compare(page, name: 'some_name')
 
           expect(File).to have_received(:rename).with(test_file_path, expected_file_path)
         end
 
         it 'returns true' do
-          expect(Regret::TestHelper.compare(page, label: 'some_label')).to eq true
+          expect(Regret::TestHelper.compare(page, name: 'some_name')).to eq true
         end
       end
     end

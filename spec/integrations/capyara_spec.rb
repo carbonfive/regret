@@ -21,13 +21,13 @@ describe 'Running a spec with capybara', type: :feature, js: true do
 
     expect(File.exists? not_found_file).to eq false
 
-    expect(Regret::TestHelper.compare(page, label: 'test_blue', selector: '.blue')).to eq true
+    expect(Regret::TestHelper.compare(page, name: 'test_blue', selector: '.blue')).to eq true
 
-    expect(Regret::TestHelper.compare(page, label: 'test_blue', selector: '.red')).to eq false
+    expect(Regret::TestHelper.compare(page, name: 'test_blue', selector: '.red')).to eq false
 
-    expect(Regret::TestHelper.compare(page, label: 'test_green', selector: '.green')).to eq true
+    expect(Regret::TestHelper.compare(page, name: 'test_green', selector: '.green')).to eq true
 
-    expect(Regret::TestHelper.compare(page, label: 'not_found', selector: '.green')).to eq true
+    expect(Regret::TestHelper.compare(page, name: 'not_found', selector: '.green')).to eq true
 
     expect(File.exists? not_found_file).to eq true
   end

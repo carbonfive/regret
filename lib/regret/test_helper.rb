@@ -4,10 +4,10 @@ module Regret
 
   class TestHelper
 
-    def self.compare(page, label:, selector: nil)
+    def self.compare(page, name:, selector: nil)
       executor_path = File.dirname(caller.first.gsub(/\:d+$/, ''))
-      existing_path = "#{executor_path}/regret/#{label}.png"
-      test_path = "#{Regret::Configuration.tmp_path}/#{label}.png"
+      existing_path = "#{executor_path}/regret/#{name}.png"
+      test_path = "#{Regret::Configuration.tmp_path}/#{name}.png"
 
       page.save_screenshot test_path, selector: selector
 
