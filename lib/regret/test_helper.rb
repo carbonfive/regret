@@ -15,6 +15,10 @@ module Regret
         comparer = ImageComparer.new(existing_path, test_path)
         comparer.diff.empty?
       else
+        folder = "#{executor_path}/regret/"
+
+        Dir.mkdir folder unless Dir.exists? folder
+
         File.rename(test_path, existing_path)
         true
       end

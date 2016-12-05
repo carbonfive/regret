@@ -1,4 +1,4 @@
-require_relative '../../lib/regret/image_comparer.rb'
+require_relative '../../lib/regret/test_helper.rb'
 require 'capybara/rspec'
 require 'capybara/poltergeist'
 require 'byebug'
@@ -6,15 +6,29 @@ require 'byebug'
 Capybara.javascript_driver = :poltergeist
 
 describe 'Running a spec with capybara', type: :feature, js: true do
-  xit 'allows comparing screenshots' do
+  it 'allows comparing screenshots' do
     directory = File.dirname(__FILE__)
 
     visit "file://#{directory}/../fixtures/test.html"
 
-    expect(Regret::TestHelpers.compare(page, label: 'test_blue', selector: '.blue')).to eq true
+    not_found_file = "#{directory}/regret/not_found.png"
 
-    expect(Regret::TestHelpers.compare(page, label: 'test_blue', selector: '.red')).to eq false
+    begin
+      File.delete(not_found_file)
+      rescue Errno::ENOENT
+    end
 
-    expect(Regret::TestHelpers.compare(page, label: 'test_green', selector: '.green')).to eq true
+
+    expect(File.exists? not_found_file).to eq false
+
+    expect(Regret::TestHelper.compare(page, label: 'test_blue', selector: '.blue')).to eq true
+
+    expect(Regret::TestHelper.compare(page, label: 'test_blue', selector: '.red')).to eq false
+
+    expect(Regret::TestHelper.compare(page, label: 'test_green', selector: '.green')).to eq true
+
+    expect(Regret::TestHelper.compare(page, label: 'not_found', selector: '.green')).to eq true
+
+    expect(File.exists? not_found_file).to eq true
   end
 end

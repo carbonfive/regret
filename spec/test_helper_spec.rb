@@ -3,7 +3,7 @@ require_relative '../lib/regret/image_comparer'
 require_relative '../lib/regret/configuration'
 
 Regret::Configuration.configure do |config|
-  config.tmp_path = File.dirname(__FILE__) + "../tmp"
+  config.tmp_path = File.dirname(__FILE__) + "/../tmp"
 end
 
 describe Regret::TestHelper do
@@ -67,6 +67,35 @@ describe Regret::TestHelper do
 
         before do
           allow(File).to receive(:rename)
+        end
+
+        describe 'screenshot folder' do
+          before do
+            allow(Dir).to receive(:mkdir)
+            allow(Dir).to receive(:exists?) { dir_exists }
+          end
+
+          context 'when the screenshot folder does not exist' do
+            let(:dir_exists) { false }
+
+            it 'creates a new folder for screenshots' do
+              folder = File.dirname(__FILE__) + '/regret/'
+
+              Regret::TestHelper.compare(page, label: 'some_label')
+
+              expect(Dir).to have_received(:mkdir).with(folder)
+            end
+          end
+
+          context 'when the screenshot folder does exist' do
+            let(:dir_exists) { true }
+
+            it 'does not create a new folder' do
+              Regret::TestHelper.compare(page, label: 'some_label')
+
+              expect(Dir).to_not have_received(:mkdir)
+            end
+          end
         end
 
         it 'moves the screenshot to the expected folder location' do
