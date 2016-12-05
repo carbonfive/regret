@@ -9,6 +9,8 @@ module Regret
       existing_path = "#{executor_path}/regret/#{label}.png"
       test_path = "#{Regret::Configuration.tmp_path}/#{label}.png"
 
+      page.save_screenshot test_path, selector: selector
+
       if File.exists? existing_path
         comparer = ImageComparer.new(existing_path, test_path)
         comparer.diff.empty?

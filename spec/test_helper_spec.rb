@@ -18,10 +18,21 @@ describe Regret::TestHelper do
     context 'when provided a label' do
       let(:test_file_path) { Regret::Configuration.tmp_path + '/some_label.png' }
       let(:expected_file_path) { File.dirname(__FILE__) + '/regret/some_label.png' }
+      let(:expected_file_exists) { false }
 
       before do
-        allow(page).to receive(:save_screenshot).with('some_folder_path/some_label.png')
+        allow(page).to receive(:save_screenshot)
         allow(File).to receive(:exists?) { expected_file_exists }
+      end
+
+      it 'takes a screenshot using provided page session' do
+        allow(File).to receive(:rename)
+
+        Regret::TestHelper.compare(page, label: 'some_label', selector: 'foobar')
+
+        expect(page).to have_received(:save_screenshot).with(
+          test_file_path, { selector: 'foobar' }
+        )
       end
 
       context 'when the target screenshot already exists' do
