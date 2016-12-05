@@ -47,4 +47,25 @@ describe Regret::ImageComparer do
     end
   end
 
+  describe '#create_diff_image!' do
+    before do
+      File.delete('tmp/test-diff.png')
+    end
+
+    after do
+      File.delete('tmp/test-diff.png')
+    end
+
+    it 'creates an image which reflects the diff of two images' do
+      comparer = Regret::ImageComparer.new('spec/fixtures/image_1.png', 'spec/fixtures/image_2.png')
+
+      comparer.create_diff_image! "tmp/test-diff.png"
+
+      fixture = ChunkyPNG::Image.from_file "spec/fixtures/fixture-diff.png"
+      test = ChunkyPNG::Image.from_file "tmp/test-diff.png"
+
+      expect(fixture.pixels).to eq test.pixels
+    end
+  end
+
 end

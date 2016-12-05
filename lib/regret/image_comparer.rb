@@ -25,7 +25,7 @@ module Regret
       end
     end
 
-    def create_diff_image!
+    def create_diff_image! file_path
       image = ChunkyPNG::Image.new(
         @width, @height, ChunkyPNG::Color::TRANSPARENT,
       )
@@ -34,7 +34,7 @@ module Regret
         image[d[0], d[1]] = ChunkyPNG::Color('red')
       end
 
-      image.save('diff.png', interlace: true)
+      image.save(file_path, interlace: true)
     end
 
   end
