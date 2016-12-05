@@ -21,14 +21,19 @@ describe Regret::TestHelper do
 
       before do
         allow(page).to receive(:save_screenshot).with('some_folder_path/some_label.png')
-
-        allow(Regret::ImageComparer).to receive(:new).with(
-          expected_file_path,
-          test_file_path,
-        ).and_return(image_comparer)
+        allow(File).to receive(:exists?) { expected_file_exists }
       end
 
       context 'when the target screenshot already exists' do
+        let(:expected_file_exists) { true }
+
+        before do
+          allow(Regret::ImageComparer).to receive(:new).with(
+            expected_file_path,
+            test_file_path,
+          ).and_return(image_comparer)
+        end
+
         context 'and the screenshots match' do
           let(:diff) { [] }
 
@@ -46,8 +51,22 @@ describe Regret::TestHelper do
         end
       end
 
-      xcontext 'when the target screenshot does not exist' do
+      context 'when the target screenshot does not exist' do
+        let(:expected_file_exists) { false }
 
+        before do
+          allow(File).to receive(:rename)
+        end
+
+        it 'moves the screenshot to the expected folder location' do
+          Regret::TestHelper.compare(page, label: 'some_label')
+
+          expect(File).to have_received(:rename).with(test_file_path, expected_file_path)
+        end
+
+        it 'returns true' do
+          expect(Regret::TestHelper.compare(page, label: 'some_label')).to eq true
+        end
       end
     end
 

@@ -7,11 +7,15 @@ module Regret
     def self.compare(page, label:, selector: nil)
       executor_path = File.dirname(caller.first.gsub(/\:d+$/, ''))
       existing_path = "#{executor_path}/regret/#{label}.png"
-      new_path = "#{Regret::Configuration.tmp_path}/#{label}.png"
+      test_path = "#{Regret::Configuration.tmp_path}/#{label}.png"
 
-      comparer = ImageComparer.new(existing_path, new_path)
-
-      comparer.diff.empty?
+      if File.exists? existing_path
+        comparer = ImageComparer.new(existing_path, test_path)
+        comparer.diff.empty?
+      else
+        File.rename(test_path, existing_path)
+        true
+      end
     end
 
   end
