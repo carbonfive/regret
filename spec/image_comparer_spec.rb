@@ -48,14 +48,6 @@ describe Regret::ImageComparer do
   end
 
   describe '#create_diff_image!' do
-    before do
-      File.delete('tmp/test-diff.png')
-    end
-
-    after do
-      File.delete('tmp/test-diff.png')
-    end
-
     it 'creates an image which reflects the diff of two images' do
       comparer = Regret::ImageComparer.new('spec/fixtures/image_1.png', 'spec/fixtures/image_2.png')
 

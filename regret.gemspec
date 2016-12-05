@@ -25,6 +25,9 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency('rake')
   spec.add_development_dependency('rspec', '~> 3')
+  spec.add_development_dependency('capybara')
+  spec.add_development_dependency('poltergeist')
+  spec.add_development_dependency('byebug')
 
   spec.rdoc_options << '--title' << spec.name << '--main' << 'README.rdoc' << '--line-numbers' << '--inline-source'
   spec.extra_rdoc_files = ['README.md', 'BENCHMARKING.rdoc', 'CONTRIBUTING.rdoc', 'CHANGELOG.rdoc']
