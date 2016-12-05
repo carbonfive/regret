@@ -41,6 +41,14 @@ The goals of this gem are to remain agnostic, slim, and provide a simplified wor
 
 It is up to you to wrap the method calls in assertions, should you want test failures.
 
+## Other features
+
+```ruby
+# Take a screenshot of a section of the page (driver must support)
+
+Regret::TestHelper.compare(page, name: 'Test', selector: '.my-element')
+```
+
 ## Running Tests
 
 ```
