@@ -8,6 +8,17 @@ Provides a simple workflow for specifying and maintaining screenshot-based test 
 > bundle
 ```
 
+```ruby
+# Before your specs run
+
+require 'regret/configuration'
+
+Regret::Configuration.configure do |config|
+  #specify a tmp_path for temporary screenshot files
+  config.tmp_path = YOUR_PROJECT_TMP_FOLDER
+end
+```
+
 And in any spec of your choosing...
 
 ```ruby
