@@ -1,4 +1,5 @@
 require_relative 'configuration'
+require_relative 'exceptions'
 require 'yaml'
 
 module Regret
@@ -27,6 +28,11 @@ module Regret
       File.write path, YAML.dump(yaml)
     end
 
+    def self.report_results!
+      results = report_results
+      raise Exceptions::TestFailure unless results
+    end
+
     def self.report_results
       yaml = begin
         YAML.load File.read(path)
@@ -45,6 +51,8 @@ module Regret
           puts "DIFF:     #{v[:diff]}"
         end
       end
+
+      mismatches.empty?
     end
 
     def self.path
