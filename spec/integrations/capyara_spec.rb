@@ -20,14 +20,17 @@ describe 'Running a spec with capybara', type: :feature, js: true do
     visit "file://#{directory}/../fixtures/test.html"
 
     not_found_file = "#{directory}/regret/not_found.png"
+    diff_file = "#{directory}/regret/test_blue-diff.png"
 
     begin
       File.delete(not_found_file)
+      File.delete(diff_file)
       rescue Errno::ENOENT
     end
 
 
     expect(File.exists? not_found_file).to eq false
+    expect(File.exists? diff_file).to eq false
 
     expect(Regret::TestHelper.compare(page, name: 'test_blue', selector: '.blue')).to eq true
 
@@ -38,6 +41,7 @@ describe 'Running a spec with capybara', type: :feature, js: true do
     expect(Regret::TestHelper.compare(page, name: 'not_found', selector: '.green')).to eq true
 
     expect(File.exists? not_found_file).to eq true
+    expect(File.exists? diff_file).to eq true
 
     report_output = <<-TEXT
       FOUND MISMATCHES:

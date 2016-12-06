@@ -12,16 +12,18 @@ module Regret
 
       page.save_screenshot test_path, selector: selector
 
+      folder = "#{executor_path}/regret/"
+      Dir.mkdir folder unless Dir.exists? folder
+
       if File.exists? existing_path
         comparer = ImageComparer.new(existing_path, test_path)
         matched = comparer.diff.empty?
-        Report.report_mismatch(name) unless matched
+        unless matched
+          comparer.create_diff_image! "#{folder}/#{name}-diff.png"
+          Report.report_mismatch(name)
+        end
         matched
       else
-        folder = "#{executor_path}/regret/"
-
-        Dir.mkdir folder unless Dir.exists? folder
-
         File.rename(test_path, existing_path)
         true
       end

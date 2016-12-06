@@ -4,7 +4,10 @@ require 'yaml'
 module Regret
   class Report
     def self.reset!
-      File.delete(path)
+      begin
+        File.delete(path)
+      rescue Errno::ENOENT
+      end
     end
 
     def self.report_mismatch(test_name)
