@@ -27,7 +27,7 @@ module Regret
 
     def create_diff_image! file_path
       image = ChunkyPNG::Image.new(
-        @width, @height, ChunkyPNG::Color::TRANSPARENT,
+        @width, @height, ChunkyPNG::Color::BLACK,
       )
 
       diff.each do |d|
