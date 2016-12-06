@@ -6,7 +6,7 @@ require_relative '../../lib/regret/configuration'
 require_relative '../../lib/regret/report'
 
 Regret::Configuration.configure do |config|
-  config.tmp_path = File.dirname(__FILE__) + "/../../tmp"
+  config.tmp_path = File.realdirpath(File.dirname(__FILE__) + "/../../tmp")
 end
 
 Capybara.javascript_driver = :poltergeist
@@ -19,15 +19,18 @@ describe 'Running a spec with capybara', type: :feature, js: true do
 
     visit "file://#{directory}/../fixtures/test.html"
 
-    not_found_file = "#{directory}/regret/not_found.png"
-    diff_file = "#{directory}/regret/test_blue-diff.png"
+    not_found_file = File.realdirpath("#{directory}/regret/not_found.png")
+    diff_file = File.realdirpath("#{directory}/../../tmp/test_blue-diff.png")
 
     begin
       File.delete(not_found_file)
-      File.delete(diff_file)
       rescue Errno::ENOENT
     end
 
+    begin
+      File.delete(diff_file)
+      rescue Errno::ENOENT
+    end
 
     expect(File.exists? not_found_file).to eq false
     expect(File.exists? diff_file).to eq false
@@ -46,6 +49,9 @@ describe 'Running a spec with capybara', type: :feature, js: true do
     report_output = <<-TEXT
       FOUND MISMATCHES:
       test_blue
+      ACTUAL:   #{File.realdirpath("#{directory}/../../tmp/test_blue.png")}
+      EXPECTED: #{directory}/regret/test_blue.png
+      DIFF:     #{diff_file}
     TEXT
 
     report_output.gsub!(/^\s+/, '')

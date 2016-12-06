@@ -17,7 +17,7 @@ describe Regret::TestHelper do
 
   describe '.compare' do
     context 'when provided a name' do
-      let(:test_file_path) { Regret::Configuration.tmp_path + '/some_name.png' }
+      let(:actual_file_path) { Regret::Configuration.tmp_path + '/some_name.png' }
       let(:expected_file_path) { File.dirname(__FILE__) + '/regret/some_name.png' }
       let(:expected_file_exists) { false }
 
@@ -32,7 +32,7 @@ describe Regret::TestHelper do
         Regret::TestHelper.compare(page, name: 'some_name', selector: 'foobar')
 
         expect(page).to have_received(:save_screenshot).with(
-          test_file_path, { selector: 'foobar' }
+          actual_file_path, { selector: 'foobar' }
         )
       end
 
@@ -72,7 +72,7 @@ describe Regret::TestHelper do
         before do
           allow(Regret::ImageComparer).to receive(:new).with(
             expected_file_path,
-            test_file_path,
+            actual_file_path,
           ).and_return(image_comparer)
         end
 
@@ -97,14 +97,17 @@ describe Regret::TestHelper do
           end
 
           it 'creates a diff image' do
-            folder = File.dirname(__FILE__) + '/regret/'
+            folder = File.dirname(__FILE__) + '/../tmp'
             Regret::TestHelper.compare(page, name: 'some_name')
             expect(image_comparer).to have_received(:create_diff_image!).with("#{folder}/some_name-diff.png")
           end
 
           it 'reports on the mismatch' do
+            folder = File.dirname(__FILE__) + '/../tmp'
             Regret::TestHelper.compare(page, name: 'some_name')
-            expect(Regret::Report).to have_received(:report_mismatch).with('some_name')
+            expect(Regret::Report).to have_received(:report_mismatch).with(
+              'some_name', actual_file_path, expected_file_path, "#{folder}/some_name-diff.png"
+            )
           end
         end
       end
@@ -119,7 +122,7 @@ describe Regret::TestHelper do
         it 'moves the screenshot to the expected folder location' do
           Regret::TestHelper.compare(page, name: 'some_name')
 
-          expect(File).to have_received(:rename).with(test_file_path, expected_file_path)
+          expect(File).to have_received(:rename).with(actual_file_path, expected_file_path)
         end
 
         it 'returns true' do
