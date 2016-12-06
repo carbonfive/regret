@@ -1,4 +1,5 @@
 require_relative 'image_comparer'
+require_relative 'report'
 
 module Regret
 
@@ -13,7 +14,9 @@ module Regret
 
       if File.exists? existing_path
         comparer = ImageComparer.new(existing_path, test_path)
-        comparer.diff.empty?
+        matched = comparer.diff.empty?
+        Report.report_mismatch(name) unless matched
+        matched
       else
         folder = "#{executor_path}/regret/"
 
