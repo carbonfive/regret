@@ -1,14 +1,17 @@
 require_relative 'image_comparer'
 require_relative 'report'
+require_relative 'configuration'
 
 module Regret
 
   class TestHelper
 
-    def self.compare(page, name:, selector: nil)
+    def self.compare(page, name:, selector: nil, size: nil)
       executor_path = File.dirname(caller.first.gsub(/\:d+$/, ''))
       expected_path = "#{executor_path}/regret/#{name}.png"
       actual_path = "#{Regret::Configuration.tmp_path}/#{name}.png"
+
+      page.driver.resize *Configuration.window_sizes[size] if size
 
       page.save_screenshot actual_path, selector: selector
 

@@ -7,6 +7,10 @@ require_relative '../../lib/regret/report'
 
 Regret::Configuration.configure do |config|
   config.tmp_path = File.realdirpath(File.dirname(__FILE__) + "/../../tmp")
+  config.window_sizes = {
+    small: [320, 568],
+    large: [1024, 768],
+  }
 end
 
 Capybara.javascript_driver = :poltergeist
@@ -42,6 +46,10 @@ describe 'Running a spec with capybara', type: :feature, js: true do
     expect(Regret::TestHelper.compare(page, name: 'test_green', selector: '.green')).to eq true
 
     expect(Regret::TestHelper.compare(page, name: 'not_found', selector: '.green')).to eq true
+
+    expect(Regret::TestHelper.compare(page, name: 'test_small', size: :small)).to eq true
+
+    expect(Regret::TestHelper.compare(page, name: 'test_large', size: :large)).to eq true
 
     expect(File.exists? not_found_file).to eq true
     expect(File.exists? diff_file).to eq true
