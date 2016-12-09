@@ -1,4 +1,5 @@
 require 'rspec/core/rake_task'
+load "lib/tasks/regret.rake"
 
 task :default => :spec
 
